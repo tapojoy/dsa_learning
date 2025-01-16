@@ -34,3 +34,35 @@ class QueueDataStructure:
         if self.head == self.size:
             self.head = 0
         return element
+
+class DequeDataStructure(QueueDataStructure):
+    def __init__(self, size):
+        super().__init__(size)
+
+    def enqueue_at_tail(self, element):
+        return self.enqueue(element)
+
+    def dequeue_at_head(self):
+        return self.dequeue()
+
+    def enqueue_at_head(self, element):
+        if self.is_queue_full():
+            return False
+        if self.head == 0:
+            self.head = self.size - 1
+        else:
+            self.head -= 1
+        self.queue[self.head] = element
+        return True
+
+    def dequeue_at_tail(self):
+        if self.is_queue_empty():
+            return None
+        if self.tail == 0:
+            self.tail = self.size - 1
+        else:
+            self.tail -= 1
+        element = self.queue[self.tail]
+        self.queue[self.tail] = None
+        return element
+
