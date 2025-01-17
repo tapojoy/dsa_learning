@@ -35,6 +35,7 @@ class QueueDataStructure:
             self.head = 0
         return element
 
+
 class DequeDataStructure(QueueDataStructure):
     def __init__(self, size):
         super().__init__(size)
@@ -66,3 +67,34 @@ class DequeDataStructure(QueueDataStructure):
         self.queue[self.tail] = None
         return element
 
+
+class StackUsingQueueDataStructure:
+    def __init__(self,size):
+        self.size = size
+        self.queue1 = QueueDataStructure(self.size)
+        self.queue2 = QueueDataStructure(self.size)
+
+    def get_queue_strength(self):
+        if self.queue1.is_queue_empty():
+            return 0
+        elif self.queue1.is_queue_full():
+            return self.queue1.size
+        else:
+            distance = self.queue1.tail - self.queue1.head
+            if distance > 0:
+                return distance
+            else:
+                return self.queue1.size + distance
+
+    def push_using_queues(self, element):
+        return self.queue1.enqueue(element)
+
+    def pop_using_queues(self):
+        strength = self.get_queue_strength()
+        while strength > 1:
+            self.queue2.enqueue(self.queue1.dequeue())
+            strength -= 1
+        popped = self.queue1.dequeue()
+        while not self.queue2.is_queue_empty():
+            self.queue1.enqueue(self.queue2.dequeue())
+        return popped
