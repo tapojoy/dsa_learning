@@ -72,3 +72,27 @@ class StackDataStructureTwo(StackDataStructure):
         self.stack[self.top] = element
         self.top += 1
         return True
+
+
+class QueueUsingStackDataStructure:
+    def __init__(self,size):
+        self.size = size
+        self.stack1 = StackDataStructure(self.size)
+        self.stack2 = StackDataStructure(self.size)
+
+    def enqueue_using_stacks(self, element):
+        return self.stack1.push_to_stack(element)
+
+    def dequeue_using_stacks(self):
+        if self.stack1.is_stack_empty():
+            return None
+        top = self.stack1.top
+        while top > 1:
+            self.stack2.push_to_stack(self.stack1.pop_from_stack())
+            top -= 1
+        popped = self.stack1.pop_from_stack()
+        top = self.stack2.top
+        while top > 0:
+            self.stack1.push_to_stack(self.stack2.pop_from_stack())
+            top -= 1
+        return popped
