@@ -47,3 +47,35 @@ class MaxHeapDataStructure(HeapDataStructure):
         while i >= 0:
             self.max_heapify(i)
             i -= 1
+
+
+class MinHeapDataStructure(HeapDataStructure):
+    def __init__(self, heap):
+        super().__init__(heap)
+
+    def min_heapify(self, i):
+        while i < self.heap_size:
+            l = self.left(i)
+            r = self.right(i)
+            if l < self.heap_size:
+                if self.heap[i] < self.heap[l]:
+                    smallest = i
+                else:
+                    smallest = l
+                if r < self.heap_size:
+                    if self.heap[r] < self.heap[smallest]:
+                        smallest = r
+                if smallest != i:
+                    self.exchange(i, smallest)
+                    i = smallest
+                else:
+                    break
+            else:
+                break
+
+    def build_min_heap(self):
+        self.heap_size = self.size
+        i = (self.size // 2) - 1
+        while i >= 0:
+            self.min_heapify(i)
+            i -= 1
