@@ -113,3 +113,99 @@ class MinHeapDataStructure(HeapDataStructure):
             i -= 1
         self.heap_size = self.size
 
+
+class MaxPriorityQueueDataStructure(MaxHeapDataStructure):
+    def __init__(self, heap):
+        super().__init__(heap)
+
+    def heap_maximum(self):
+        return self.get_root()
+
+    def heap_extract_max(self):
+        if self.is_heap_empty():
+            return None
+        max_element = self.heap[0]
+        self.heap[0] = self.heap[self.heap_size - 1]
+        self.heap_size -= 1
+        self.max_heapify(0)
+        self.heap = self.get_heap()
+        self.size = len(self.heap)
+        return max_element
+
+    def heap_increase_key(self, i, key):
+        if self.heap[i] > key:
+            return False
+        self.heap[i] = key
+        while i > 0:
+            if self.heap[self.parent(i)] < self.heap[i]:
+                self.exchange(i, self.parent(i))
+                i = self.parent(i)
+            else:
+                break
+
+    def max_heap_insert(self, key):
+        i = self.heap_size
+        self.heap_size += 1
+        self.heap.append(key)
+        self.heap_increase_key(i, key)
+
+    def heap_delete(self, i):
+        if not self.is_heap_empty():
+            self.heap[i] = self.heap[self.heap_size - 1]
+            self.heap_size -= 1
+            key = self.heap[i]
+            if key < self.heap[self.parent(i)]:
+                self.max_heapify(i)
+            else:
+                self.heap_increase_key(i, key)
+            self.heap = self.get_heap()
+            self.size = len(self.heap)
+
+
+class MinPriorityQueueDataStructure(MinHeapDataStructure):
+    def __init__(self, heap):
+        super().__init__(heap)
+
+    def heap_minimum(self):
+        return self.get_root()
+
+    def heap_extract_min(self):
+        if self.is_heap_empty():
+            return None
+        min_element = self.heap[0]
+        self.heap[0] = self.heap[self.heap_size - 1]
+        self.heap_size -= 1
+        self.min_heapify(0)
+        self.heap = self.get_heap()
+        self.size = len(self.heap)
+        return min_element
+
+    def heap_decrease_key(self, i, key):
+        if self.heap[i] < key:
+            return False
+        while i > 0:
+            if self.heap[self.parent(i)] > key:
+                self.heap[i] = self.heap[self.parent(i)]
+                i = self.parent(i)
+            else:
+                break
+        self.heap[i] = key
+
+    def min_heap_insert(self, key):
+        i = self.heap_size
+        self.heap_size += 1
+        self.heap.append(key)
+        self.heap_decrease_key(i, key)
+
+    def heap_delete(self, i):
+        if not self.is_heap_empty():
+            self.heap[i] = self.heap[self.heap_size - 1]
+            self.heap_size -= 1
+            key = self.heap[i]
+            if key > self.heap[self.parent(i)]:
+                self.min_heapify(i)
+            else:
+                self.heap_decrease_key(i, key)
+            self.heap = self.get_heap()
+            self.size = len(self.heap)
+
