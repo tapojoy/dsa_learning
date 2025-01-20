@@ -56,6 +56,7 @@ class MaxHeapDataStructure(HeapDataStructure):
             self.heap_size -= 1
             self.max_heapify(0)
             i -= 1
+        self.heap_size = self.size
 
 
 class MinHeapDataStructure(HeapDataStructure):
@@ -97,4 +98,5 @@ class MinHeapDataStructure(HeapDataStructure):
             self.heap_size -= 1
             self.min_heapify(0)
             i -= 1
+        self.heap_size = self.size
 
