@@ -4,10 +4,23 @@ class HeapDataStructure:
         self.size = len(heap)
         self.heap_size = self.size
 
+    def is_heap_empty(self):
+        if self.heap_size == 0:
+            return True
+        return False
+
+    def get_heap(self):
+        return self.heap[:self.heap_size]
+
     def exchange(self, index1, index2):
         temp = self.heap[index1]
         self.heap[index1] = self.heap[index2]
         self.heap[index2] = temp
+    
+    def get_root(self):
+        if self.is_heap_empty():
+            return None
+        return self.heap[0]
 
     @staticmethod
     def parent(i):
