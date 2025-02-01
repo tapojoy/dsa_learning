@@ -15,6 +15,10 @@ class SinglyLinkedListElement:
     def get_next(self):
         return self.next
 
+    def set_none(self):
+        self.key = None
+        self.next = None
+
 
 class DoublyLinkedListElement(SinglyLinkedListElement):
     def __init__(self):
@@ -26,6 +30,10 @@ class DoublyLinkedListElement(SinglyLinkedListElement):
 
     def get_prev(self):
         return self.prev
+
+    def set_none(self):
+        super().set_none()
+        self.prev = None
 
 
 class SinglyLinkedList:
@@ -63,7 +71,7 @@ class SinglyLinkedList:
             return False
         if node is self.head:
             self.head = node.get_next()
-            node.set_next(None)
+            node.set_none()
             return True
         x = self.head
         while x.get_next() is not node:
@@ -71,9 +79,9 @@ class SinglyLinkedList:
         if node is self.tail:
             x.set_next(None)
             self.tail = x
-            return True
-        x.set_next(node.get_next())
-        node.set_next(None)
+        else:
+            x.set_next(node.get_next())
+        node.set_none()
         return True
 
 
@@ -107,13 +115,66 @@ class DoublyLinkedList(SinglyLinkedList):
         if node is self.head:
             self.head = node.get_next()
             self.head.set_prev(None)
-            node.set_next(None)
+            node.set_none()
             return True
         if node is self.tail:
             self.tail = node.get_prev()
             self.tail.set_next(None)
-            node.set_prev(None)
+            node.set_none()
             return True
         node.get_prev().set_next(node.get_next())
         node.get_next().set_prev(node.get_prev())
+        node.set_none()
+        return True
+
+
+class CircularDoublyLinkedList(DoublyLinkedList):
+    def __init__(self, head_key):
+        super().__init__(head_key)
+        self.head.set_next(self.head)
+        self.head.set_prev(self.head)
+        self.tail = self.head
+
+    def insert_at_tail(self, key):
+        super().insert_at_tail(key)
+        self.tail.set_next(self.head)
+        self.head.set_prev(self.tail)
+
+    def insert_at_head(self, key):
+        super().insert_at_head(key)
+        self.head.set_prev(self.tail)
+        self.tail.set_next(self.head)
+
+    def search_key(self, key):
+        x = self.head
+        while True:
+            if x.get_key() == key:
+                return x
+            x = x.get_next()
+            if not x:
+                return None
+            if x is self.head:
+                return None
+
+    def delete_node(self, key):
+        if self.head is self.tail:
+            return False
+        node = self.search_key(key)
+        if not isinstance(node, DoublyLinkedListElement):
+            return False
+        if node is self.head:
+            self.head = node.get_next()
+            self.head.set_prev(self.tail)
+            self.tail.set_next(self.head)
+            node.set_none()
+            return True
+        if node is self.tail:
+            self.tail = node.get_prev()
+            self.tail.set_next(self.head)
+            self.head.set_prev(self.tail)
+            node.set_none()
+            return True
+        node.get_prev().set_next(node.get_next())
+        node.get_next().set_prev(node.get_prev())
+        node.set_none()
         return True
