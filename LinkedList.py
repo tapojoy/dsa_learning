@@ -15,6 +15,11 @@ class SinglyLinkedListElement:
     def get_next(self):
         return self.next
 
+    def is_none(self):
+        if not self.key:
+            return True
+        return False
+
     def set_none(self):
         self.key = None
         self.next = None
@@ -43,12 +48,16 @@ class SinglyLinkedList:
         self.tail = self.head
 
     def insert_at_tail(self, key):
+        if not key:
+            return
         new_element = SinglyLinkedListElement()
         new_element.set_key(key)
         self.tail.set_next(new_element)
         self.tail = new_element
 
     def insert_at_head(self, key):
+        if not key:
+            return
         new_element = SinglyLinkedListElement()
         new_element.set_key(key)
         new_element.set_next(self.head)
@@ -178,3 +187,40 @@ class CircularDoublyLinkedList(DoublyLinkedList):
         node.get_next().set_prev(node.get_prev())
         node.set_none()
         return True
+
+
+class StackUsingSinglyLinkedList(SinglyLinkedList):
+    def __init__(self):
+        super().__init__(None)
+
+    def push(self, key):
+        super().insert_at_head(key)
+
+    def pop(self):
+        if self.head is self.tail:
+            return None
+        popped = self.head.get_key()
+        x = self.head.get_next()
+        self.head.set_none()
+        self.head = x
+        return popped
+
+
+class QueueUsingSinglyLinkedList(SinglyLinkedList):
+    def __init__(self):
+        super().__init__(None)
+        
+    def enqueue(self, key):
+        super().insert_at_tail(key)
+        if self.head.is_none():
+            self.head = self.tail
+        
+    def dequeue(self):
+        if self.head.is_none():
+            return None
+        dequeued = self.head.get_key()
+        x = self.head.get_next()
+        self.head.set_none()
+        if x:
+            self.head = x
+        return dequeued
