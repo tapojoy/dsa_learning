@@ -42,28 +42,22 @@ class DoublyLinkedListElement(SinglyLinkedListElement):
 
 
 class SinglyLinkedList:
-    def __init__(self, head_key):
+    def __init__(self):
         self.head = SinglyLinkedListElement()
-        self.head.set_key(head_key)
-        self.tail = self.head
 
-    def insert_at_tail(self, key):
+    def insert(self, key):
         if not key:
             return
-        new_element = SinglyLinkedListElement()
-        new_element.set_key(key)
-        self.tail.set_next(new_element)
-        self.tail = new_element
-
-    def insert_at_head(self, key):
-        if not key:
-            return
-        new_element = SinglyLinkedListElement()
-        new_element.set_key(key)
-        new_element.set_next(self.head)
-        self.head = new_element
+        if self.head.is_none():
+            self.head.set_key(key)
+        else:
+            new_element = SinglyLinkedListElement(key)
+            new_element.set_next(self.head)
+            self.head = new_element
 
     def search_key(self, key):
+        if not key:
+            return None
         x = self.head
         while True:
             if x.get_key() == key:
@@ -73,8 +67,6 @@ class SinglyLinkedList:
                 return None
 
     def delete_node(self, key):
-        if self.head is self.tail:
-            return False
         node = self.search_key(key)
         if not isinstance(node, SinglyLinkedListElement):
             return False
@@ -85,54 +77,53 @@ class SinglyLinkedList:
         x = self.head
         while x.get_next() is not node:
             x = x.get_next()
-        if node is self.tail:
+        if not node.get_next():
             x.set_next(None)
-            self.tail = x
         else:
             x.set_next(node.get_next())
         node.set_none()
         return True
 
 
-class DoublyLinkedList(SinglyLinkedList):
-    def __init__(self, head_key):
-        super().__init__(head_key)
+class DoublyLinkedList:
+    def __init__(self):
         self.head = DoublyLinkedListElement()
-        self.head.set_key(head_key)
-        self.tail = self.head
 
-    def insert_at_tail(self, key):
-        new_element = DoublyLinkedListElement()
-        new_element.set_key(key)
-        new_element.set_prev(self.tail)
-        self.tail.set_next(new_element)
-        self.tail = new_element
+    def insert(self, key):
+        if not key:
+            return
+        if self.head.is_none():
+            self.head.set_key(key)
+        else:
+            new_element = DoublyLinkedListElement(key)
+            new_element.set_next(self.head)
+            self.head.set_prev(new_element)
+            self.head = new_element
 
-    def insert_at_head(self, key):
-        new_element = DoublyLinkedListElement()
-        new_element.set_key(key)
-        new_element.set_next(self.head)
-        self.head.set_prev(new_element)
-        self.head = new_element
+    def search_key(self, key):
+        if not key:
+            return None
+        x = self.head
+        while True:
+            if x.get_key() == key:
+                return x
+            x = x.get_next()
+            if not x:
+                return None
 
     def delete_node(self, key):
-        if self.head is self.tail:
-            return False
         node = self.search_key(key)
         if not isinstance(node, DoublyLinkedListElement):
             return False
         if node is self.head:
             self.head = node.get_next()
-            self.head.set_prev(None)
             node.set_none()
             return True
-        if node is self.tail:
-            self.tail = node.get_prev()
-            self.tail.set_next(None)
-            node.set_none()
-            return True
-        node.get_prev().set_next(node.get_next())
-        node.get_next().set_prev(node.get_prev())
+        if not node.get_next():
+            node.get_prev().set_next(None)
+        else:
+            node.get_prev().set_next(node.get_next())
+            node.get_next().set_prev(node.get_prev())
         node.set_none()
         return True
 
