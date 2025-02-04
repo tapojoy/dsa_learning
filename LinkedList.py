@@ -168,30 +168,37 @@ class CircularDoublyLinkedList(DoublyLinkedList):
 
 class StackUsingSinglyLinkedList(SinglyLinkedList):
     def __init__(self):
-        super().__init__(None)
+        super().__init__()
 
     def push(self, key):
-        super().insert_at_head(key)
+        super().insert(key)
 
     def pop(self):
-        if self.head is self.tail:
+        if self.head.is_none():
             return None
         popped = self.head.get_key()
         x = self.head.get_next()
         self.head.set_none()
-        self.head = x
+        if x:
+            self.head = x
         return popped
 
 
 class QueueUsingSinglyLinkedList(SinglyLinkedList):
     def __init__(self):
-        super().__init__(None)
-        
+        super().__init__()
+        self.tail = self.head
+
     def enqueue(self, key):
-        super().insert_at_tail(key)
-        if self.head.is_none():
-            self.head = self.tail
-        
+        if not key:
+            return
+        if self.tail.is_none():
+            self.tail.set_key(key)
+        else:
+            new_element = SinglyLinkedListElement(key)
+            self.tail.set_next(new_element)
+            self.tail = new_element
+
     def dequeue(self):
         if self.head.is_none():
             return None
