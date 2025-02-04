@@ -1,6 +1,6 @@
 class SinglyLinkedListElement:
-    def __init__(self):
-        self.key = None
+    def __init__(self, key=None):
+        self.key = key
         self.next = None
 
     def set_key(self, key):
@@ -26,8 +26,8 @@ class SinglyLinkedListElement:
 
 
 class DoublyLinkedListElement(SinglyLinkedListElement):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, key=None):
+        super().__init__(key)
         self.prev = None
 
     def set_prev(self, element):
