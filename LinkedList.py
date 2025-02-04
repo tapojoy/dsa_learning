@@ -129,51 +129,37 @@ class DoublyLinkedList:
 
 
 class CircularDoublyLinkedList(DoublyLinkedList):
-    def __init__(self, head_key):
-        super().__init__(head_key)
-        self.head.set_next(self.head)
+    def __init__(self):
+        super().__init__()
         self.head.set_prev(self.head)
-        self.tail = self.head
+        self.head.set_next(self.head)
 
-    def insert_at_tail(self, key):
-        super().insert_at_tail(key)
-        self.tail.set_next(self.head)
-        self.head.set_prev(self.tail)
-
-    def insert_at_head(self, key):
-        super().insert_at_head(key)
-        self.head.set_prev(self.tail)
-        self.tail.set_next(self.head)
+    def insert(self, key):
+        if not key:
+            return
+        new_element = DoublyLinkedListElement(key)
+        new_element.set_next(self.head.get_next())
+        self.head.get_next().set_prev(new_element)
+        self.head.set_next(new_element)
+        new_element.set_prev(self.head)
 
     def search_key(self, key):
-        x = self.head
+        if not key:
+            return None
+        x = self.head.get_next()
+        if x is self.head:
+            return None
         while True:
             if x.get_key() == key:
                 return x
             x = x.get_next()
-            if not x:
-                return None
             if x is self.head:
                 return None
 
     def delete_node(self, key):
-        if self.head is self.tail:
-            return False
         node = self.search_key(key)
         if not isinstance(node, DoublyLinkedListElement):
             return False
-        if node is self.head:
-            self.head = node.get_next()
-            self.head.set_prev(self.tail)
-            self.tail.set_next(self.head)
-            node.set_none()
-            return True
-        if node is self.tail:
-            self.tail = node.get_prev()
-            self.tail.set_next(self.head)
-            self.head.set_prev(self.tail)
-            node.set_none()
-            return True
         node.get_prev().set_next(node.get_next())
         node.get_next().set_prev(node.get_prev())
         node.set_none()
