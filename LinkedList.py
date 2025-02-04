@@ -208,3 +208,41 @@ class QueueUsingSinglyLinkedList(SinglyLinkedList):
         if x:
             self.head = x
         return dequeued
+
+
+class CircularSinglyLinkedList(SinglyLinkedList):
+    def __init__(self):
+        super().__init__()
+        self.head.set_next(self.head)
+
+    def insert(self, key):
+        if not key:
+            return
+        new_element = SinglyLinkedListElement(key)
+        new_element.set_next(self.head.get_next())
+        self.head.set_next(new_element)
+
+    def search_key(self, key):
+        if not key:
+            return None
+        x = self.head.get_next()
+        if x is self.head:
+            return None
+        while True:
+            if x.get_key() == key:
+                return x
+            x = x.get_next()
+            if x is self.head:
+                return None
+
+    def delete_node(self, key):
+        node = self.search_key(key)
+        if not isinstance(node, SinglyLinkedListElement):
+            return False
+        x = self.head
+        while x.get_next() is not node:
+            x = x.get_next()
+        x.set_next(node.get_next())
+        node.set_none()
+        return True
+
