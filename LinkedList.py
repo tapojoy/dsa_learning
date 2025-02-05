@@ -284,3 +284,21 @@ def linked_list_union(l1,l2):
         x.set_none()
         return l1
 
+
+def linked_list_reverse(l):
+    error_text = 'input should be of type SinglyLinkedList'
+    assert isinstance(l,SinglyLinkedList), error_text
+    x = l.head
+    if x.is_none(): return l
+    y = x.get_next()
+    if not y: return l
+    while True:
+        z = y.get_next()
+        y.set_next(x)
+        if not z:
+            l.head.set_next(None)
+            l.head = y
+            return l
+        x = y
+        y = z
+
