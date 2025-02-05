@@ -246,3 +246,41 @@ class CircularSinglyLinkedList(SinglyLinkedList):
         node.set_none()
         return True
 
+
+def linked_list_union(l1,l2):
+    input_type_tuple = (
+        QueueUsingSinglyLinkedList,
+        CircularSinglyLinkedList,
+        CircularDoublyLinkedList
+    )
+    error1 = 'inputs should be of same type'
+    error2 = 'permitted input types are : ' + str(input_type_tuple)
+    assert type(l1) is type(l2), error1
+    assert isinstance(l1, input_type_tuple), error2
+    if isinstance(l1, QueueUsingSinglyLinkedList):
+        if l1.head.is_none():
+            return l2
+        if l2.head.is_none():
+            return l1
+        l1.tail.set_next(l2.head)
+        l1.tail = l2.tail
+        return l1
+    if isinstance(l1, CircularSinglyLinkedList):
+        x = l1.head.get_next()
+        if x is l1.head:
+            return l2
+        l1.head.set_next(l2.head.get_next())
+        l2.head.set_next(x.get_next())
+        l2.head.set_key(x.get_key())
+        x.set_none()
+        return l1
+    if isinstance(l1, CircularDoublyLinkedList):
+        x = l1.head.get_next()
+        l1.head.set_next(l2.head.get_next())
+        l2.head.get_next().set_prev(l1.head)
+        l2.head.get_prev().set_next(x)
+        x.set_prev(l2.head.get_prev())
+        x = l2.head
+        x.set_none()
+        return l1
+
