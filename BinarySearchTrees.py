@@ -55,3 +55,26 @@ def tree_maximum(x):
         x = x.right
     return x
 
+def tree_successor(x):
+    if x.right is not None:
+        return tree_minimum(x.right)
+    y = x.p
+    while True:
+        if not y:
+            return y
+        if x is not y.right:
+            return y
+        x = y
+        y = y.p
+
+def tree_predecessor(x):
+    if x.left is not None:
+        return tree_maximum(x.left)
+    y = x.p
+    while True:
+        if not y:
+            return y
+        if x is not y.left:
+            return y
+        x = y
+        y = y.p
