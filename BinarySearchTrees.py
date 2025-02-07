@@ -4,15 +4,23 @@ class BinarySearchTreeNode:
         self.key = key
         self.left = None
         self.right = None
-        
 
-class BinarySearchTrees:
-    def __init__(self):
-        self.root = BinarySearchTreeNode()
 
-    def inorder_tree_walk(self, x):
-        if not x: return
-        self.inorder_tree_walk(x.left)
-        print(x.key)
-        self.inorder_tree_walk(x.right)
+def inorder_tree_walk(x):
+    if not x: return
+    inorder_tree_walk(x.left)
+    print(x.key)
+    inorder_tree_walk(x.right)
+
+def preorder_tree_walk(x):
+    if not x: return
+    print(x.key)
+    preorder_tree_walk(x.left)
+    preorder_tree_walk(x.right)
+
+def postorder_tree_walk(x):
+    if not x: return
+    postorder_tree_walk(x.left)
+    postorder_tree_walk(x.right)
+    print(x.key)
 
