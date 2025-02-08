@@ -50,10 +50,22 @@ def tree_minimum(x):
         x = x.left
     return x
 
+def tree_minimum_recursive(x):
+    if x.left is None:
+        return x
+    else:
+        return tree_minimum_recursive(x.left)
+
 def tree_maximum(x):
     while x.right is not None:
         x = x.right
     return x
+
+def tree_maximum_recursive(x):
+    if x.right is None:
+        return x
+    else:
+        return tree_maximum_recursive(x.right)
 
 def tree_successor(x):
     if x.right is not None:
@@ -78,3 +90,12 @@ def tree_predecessor(x):
             return y
         x = y
         y = y.p
+
+def inorder_tree_walk_alt(x):
+    node = tree_minimum(x)
+    res = [node.key]
+    while True:
+        node = tree_successor(node)
+        if not node:
+            return res
+        res.append(node.key)
