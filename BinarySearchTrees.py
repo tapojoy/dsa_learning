@@ -7,16 +7,6 @@ class BinarySearchTreeNode:
             assert isinstance(key, int), 'keys should be initialized as int'
         self.key = key
 
-    def set_right(self, right):
-        assert isinstance(right, BinarySearchTreeNode), 'incorrect input type'
-        self.right = right
-        right.p = self
-
-    def set_left(self, left):
-        assert isinstance(left, BinarySearchTreeNode), 'incorrect input type'
-        self.left = left
-        left.p = self
-
     def is_none(self):
         if self.key is None:
             return True
@@ -41,11 +31,79 @@ class BinarySearchTrees:
             y = x
             x = x.left if key < x.key else x.right
             if not x:
+                new_node.p = y
                 if key < y.key:
-                    y.set_left(new_node)
+                    y.left = new_node
                     return True
-                y.set_right(new_node)
+                y.right = new_node
                 return True
+
+    def insert_recursive(self, x, y, node):
+        if x is None:
+            if node.key < y.key:
+                y.left = node
+                y.left.p = y
+                return True
+            y.right = node
+            y.right.p = y
+            return True
+        elif node.key < x.key:
+            return self.insert_recursive(x.left, x, node)
+        else:
+            return self.insert_recursive(x.right, x, node)
+
+    def insert_recursive_helper(self, key):
+        if self.root.is_none():
+            self.root.set_key(key)
+            return True
+        new_node = BinarySearchTreeNode(key)
+        x = self.root
+        y = x.p
+        return self.insert_recursive(x, y, new_node)
+
+    def transplant(self, u, v):
+        if v is not None:
+            assert isinstance(v, BinarySearchTreeNode), 'incorrect type'
+        if u.p is None:
+            self.root =  v if v is not None else BinarySearchTreeNode()
+        elif u.p.left is u:
+            u.p.left = v
+        elif u.p.right is u:
+            u.p.right = v
+        if v is not None:
+            v.p = u.p
+
+    def tree_delete_by_successor(self, key):
+        node = tree_search(self.root, key)
+        if not node: return False
+        if node.left is None: self.transplant(node, node.right)
+        elif node.right is None: self.transplant(node, node.left)
+        else:
+            y = tree_minimum(node.right)
+            if node is not y.p:
+                self.transplant(y, y.right)
+                y.right = node.right
+                y.right.p = y
+            self.transplant(node, y)
+            y.left = node.left
+            y.left.p = y
+        return True
+
+    def tree_delete_by_predecessor(self, key):
+        node = tree_search(self.root, key)
+        if not node: return False
+        if node.left is None: self.transplant(node, node.right)
+        elif node.right is None: self.transplant(node, node.left)
+        else:
+            y = tree_maximum(node.left)
+            if node is not y.p:
+                self.transplant(y, y.left)
+                y.left = node.left
+                y.left.p = y
+            self.transplant(node, y)
+            y.right = node.right
+            y.right.p = y
+        return True
 
 
 def inorder_tree_walk(x):
@@ -141,3 +199,4 @@ def inorder_tree_walk_alt(x):
         if not node:
             return res
         res.append(node.key)
+
