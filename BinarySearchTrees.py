@@ -1,9 +1,51 @@
 class BinarySearchTreeNode:
     def __init__(self, key=None):
         self.p = None
-        self.key = key
         self.left = None
         self.right = None
+        if key is not None:
+            assert isinstance(key, int), 'keys should be initialized as int'
+        self.key = key
+
+    def set_right(self, right):
+        assert isinstance(right, BinarySearchTreeNode), 'incorrect input type'
+        self.right = right
+        right.p = self
+
+    def set_left(self, left):
+        assert isinstance(left, BinarySearchTreeNode), 'incorrect input type'
+        self.left = left
+        left.p = self
+
+    def is_none(self):
+        if self.key is None:
+            return True
+        return False
+
+    def set_key(self, key):
+        assert isinstance(key, int), 'keys should be of type int'
+        self.key = key
+
+
+class BinarySearchTrees:
+    def __init__(self):
+        self.root = BinarySearchTreeNode()
+
+    def insert(self, key):
+        if self.root.is_none():
+            self.root.set_key(key)
+            return True
+        new_node = BinarySearchTreeNode(key)
+        x = self.root
+        while True:
+            y = x
+            x = x.left if key < x.key else x.right
+            if not x:
+                if key < y.key:
+                    y.set_left(new_node)
+                    return True
+                y.set_right(new_node)
+                return True
 
 
 def inorder_tree_walk(x):
