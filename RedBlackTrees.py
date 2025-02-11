@@ -82,7 +82,7 @@ class RedBlackTrees:
                 new_node.right = self.NIL
                 new_node.set_color_red()
                 self.rb_insert_fixup(new_node)
-                break
+                return True
 
     def rb_insert_fixup(self, node):
         while node.p.is_color_red():
@@ -116,4 +116,85 @@ class RedBlackTrees:
                     self.left_rotate(node.p.p)
         self.root.set_color_black()
 
+
+class RedBlackTreesWithStacks(RedBlackTrees):
+    def __init__(self):
+        super().__init__()
+    
+    def rb_insert(self, key):
+        if self.root.is_none():
+            self.root.set_key(key)
+            self.root.p = None
+            return True
+        new_node = RedBlackTreeNode(key)
+        x = self.root
+        y = []
+        while True:
+            y.append(x)
+            x = x.left if key < x.key else x.right
+            if x is self.NIL:
+                x = y.pop()
+                if key < x.key: x.left = new_node
+                else: x.right = new_node
+                new_node.left = self.NIL
+                new_node.right = self.NIL
+                new_node.set_color_red()
+                self.rb_insert_fixup2(x, y, new_node)
+                return True
+
+    def rb_insert_fixup2(self, x, y, node):
+        n_p = x
+        n_p_p = y.pop() if y else self.NIL
+        while n_p.is_color_red():
+            if n_p is n_p_p.left:
+                w = n_p_p.right
+                if w.is_color_red():
+                    n_p.set_color_black()
+                    w.set_color_black()
+                    n_p_p.set_color_red()
+                    node = n_p_p
+                    n_p = y.pop() if y else self.NIL
+                    n_p_p = y.pop() if y else self.NIL
+                else:
+                    if node is n_p.right:
+                        node, n_p = n_p, node
+                        self.left_rotate2(node, n_p_p)
+                    n_p.set_color_black()
+                    n_p_p.set_color_red()
+                    p = y.pop() if y else self.NIL
+                    self.right_rotate2(n_p_p, p)
+            else:
+                w = n_p_p.left
+                if w.is_color_red():
+                    n_p.set_color_black()
+                    w.set_color_black()
+                    n_p_p.set_color_red()
+                    node = n_p_p
+                    n_p = y.pop() if y else self.NIL
+                    n_p_p = y.pop() if y else self.NIL
+                else:
+                    if node is n_p.left:
+                        node, n_p = n_p, node
+                        self.right_rotate2(node, n_p_p)
+                    n_p.set_color_black()
+                    n_p_p.set_color_red()
+                    p = y.pop() if y else self.NIL
+                    self.left_rotate2(n_p_p, p)
+        self.root.set_color_black()
+
+    def left_rotate2(self, x, p):
+        y = x.right
+        x.right = y.left
+        if p is self.NIL: self.root = y
+        elif x is p.left: p.left = y
+        else: p.right = y
+        y.left = x
+
+    def right_rotate2(self, y, p):
+        x = y.left
+        y.left = x.right
+        if p is self.NIL: self.root = x
+        elif y is p.left: p.left = x
+        else: p.right = x
+        x.right = y
 
