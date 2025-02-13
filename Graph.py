@@ -61,3 +61,29 @@ class Graph:
         self.shrink_matrix(key)
         return popped
 
+
+def in_degree(g, v):
+    assert isinstance(g, Graph), 'graph is invalid'
+    assert isinstance(v, Vertex), 'vertex is invalid'
+    assert v in g.adj_list, 'given vertex is not in the given graph'
+    sum1 = len(v.edges)
+    key = g.adj_list.index(v)
+    sum2 = sum(g.adj_matrix[key])
+    sum3 = sum(g.adj_matrix[v.key-1])
+    assert sum1 == sum2 == sum3, 'sum mismatch'
+    return sum1
+
+def out_degree(g, v):
+    assert isinstance(g, Graph), 'graph is invalid'
+    assert isinstance(v, Vertex), 'vertex is invalid'
+    assert v in g.adj_list, 'given vertex is not in the given graph'
+    sum1 = 0
+    for vertex in g.adj_list:
+        if v in vertex.edges:
+            sum1 += 1
+    key = g.adj_list.index(v)
+    sum2 = 0
+    for row in g.adj_matrix:
+        sum2 += row[key]
+    assert sum1 == sum2, 'sum mismatch'
+    return sum2
